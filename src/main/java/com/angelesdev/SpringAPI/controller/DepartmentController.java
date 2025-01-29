@@ -18,13 +18,13 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     // Get all departments
-    @RequestMapping
+    @GetMapping
     public List<Department> getAllDepartments(){
         return departmentService.getAlldepartments();
     }
 
     // Get department by id
-    @RequestMapping("/{dept_no}")
+    @GetMapping("/{dept_no}")
     public Optional<Department> getDepartmentById(@PathVariable String dept_no){
         return departmentService.getDepartmentById(dept_no);
     }

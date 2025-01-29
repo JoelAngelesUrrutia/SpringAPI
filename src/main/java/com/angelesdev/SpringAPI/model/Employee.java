@@ -2,8 +2,6 @@ package com.angelesdev.SpringAPI.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
@@ -13,9 +11,8 @@ import jakarta.persistence.Table;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "emp_no")
-    private long empNo;
+    private Long empNo;
 
     @Column(name = "birth_date")
     private String birthDate;
