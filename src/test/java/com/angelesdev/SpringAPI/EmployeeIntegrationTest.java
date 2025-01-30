@@ -16,11 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EmployeeControllerTest {
+public class EmployeeIntegrationTest {
 
     private static final long EMP_NO = 102L;
 
@@ -28,15 +29,16 @@ public class EmployeeControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;  // Usado para convertir objetos a JSON
+    private ObjectMapper objectMapper;
 
     @Autowired
-    private EmployeeRepository employeeRepository;  // Acceso a la base de datos
+    private EmployeeRepository employeeRepository;
 
     @Test
-    @Transactional  // Asegura que los cambios se revierten después de la prueba
+    @Transactional
     public void testCreateEmployee() throws Exception {
-        // Crear un objeto Employee
+
+        // CREATE EMPLOYEE OBJECT
         Employee newEmployee = new Employee();
         newEmployee.setEmpNo(EMP_NO);
         newEmployee.setFirstName("John");
@@ -44,24 +46,39 @@ public class EmployeeControllerTest {
         newEmployee.setBirthDate("1990-01-01");
         newEmployee.setHireDate("2020-01-01");
 
-        // Convertir el objeto Employee a JSON
+        // GENERATE JSON
         String newEmployeeJson = objectMapper.writeValueAsString(newEmployee);
 
-        // Realizar la solicitud POST para crear el nuevo empleado
+        // POST REQUEST TO CREATE NEW EMPLOYEE
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(newEmployeeJson)) // Usar el JSON generado
-                .andExpect(status().isCreated());  // Esperar respuesta 201 Created
+                .content(newEmployeeJson))
+                .andExpect(status().isCreated());  // 201 Created
 
-        // Verificar que el empleado fue creado
+        // VERIFY CREATED EMPLOYEE
         Employee createdEmployee = employeeRepository.findById(EMP_NO).orElseThrow();
         assertEquals(EMP_NO, createdEmployee.getEmpNo());
 
-        // Eliminar el empleado usando DELETE
+        // MODIFY EMPLOYEE DATA
+        newEmployee.setFirstName("Sam");
+        newEmployee.setLastName("Cooper");
+        newEmployee.setBirthDate("1999-01-01");
+        newEmployee.setHireDate("2019-01-01");
+
+        // GENERATE NEW JSON
+        newEmployeeJson = objectMapper.writeValueAsString(newEmployee);
+
+        // PUT REQUEST TO UPDATE EMPLOYEE
+        mockMvc.perform(put("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newEmployeeJson))
+                .andExpect(status().isOk()); // 200 OK
+
+        // DELETE REQUEST TO DELETE EMPLOYEE
         mockMvc.perform(delete("/employees/" + EMP_NO))
                 .andExpect(status().isNoContent()); // 204 No Content
 
-        // Verificar que el empleado fue eliminado
-        assertFalse(employeeRepository.findById(EMP_NO).isPresent(), "El empleado debería haber sido eliminado");
+        // VERIFY DELETED EMPLOYEE
+        assertFalse(employeeRepository.findById(EMP_NO).isPresent(), "Employee deleted.");
     }
 }

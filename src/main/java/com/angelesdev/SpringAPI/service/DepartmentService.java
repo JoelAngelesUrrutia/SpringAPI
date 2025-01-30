@@ -30,7 +30,7 @@ public class DepartmentService {
     }
 
     // Delete a department
-    public void deleteDepartment(String dept_no){
-        departmentRepository.deleteById(dept_no);
+    public void deleteDepartment(String deptNo){
+        departmentRepository.deleteById(deptNo);
     }
 }

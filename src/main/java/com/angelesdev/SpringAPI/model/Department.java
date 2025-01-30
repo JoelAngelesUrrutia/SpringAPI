@@ -2,9 +2,11 @@ package com.angelesdev.SpringAPI.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
-
 
 @Entity
 @Table(name = "departments")
@@ -12,17 +14,19 @@ public class Department {
 
     @Id
     @Column(name = "dept_no", length = 4)
-    private String empNo;
+    @JsonProperty("deptNo")
+    private String deptNo;
 
     @Column(name = "dept_name")
+    @JsonProperty("deptName")
     private String deptName;
 
-    public String getEmpNo(){
-        return empNo;
+    public String getDeptNo(){
+        return deptNo;
     }
 
-    public void setEmpNo(String empNo){
-        this.empNo = empNo;
+    public void setDeptNo(String deptNo){
+        this.deptNo = deptNo;
     }
 
     public String getDeptName(){

@@ -31,15 +31,23 @@ public class EmployeeController {
     // Get employee by ID
     @Operation(summary = "Get employee by ID", description = "Return an employee info by ID.")
     @GetMapping("/{empNo}")
-    public Optional<Employee> getEmployeeById( @Parameter(description = "employee ID") @PathVariable Long empNo) {
+    public Optional<Employee> getEmployeeById(@Parameter(description = "employee ID") @PathVariable Long empNo) {
         return employeeService.getEmployeeById(empNo);
     }
 
-    // Save or update an employee
-    @Operation(summary = "Create or update an employee", description = "Creates or updates an employee to database.")
+    // Save an employee
+    @Operation(summary = "Create an employee", description = "Creates an employee to database.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Employee saveEmployee(@RequestBody Employee employee) {
+        return employeeService.saveEmployee(employee);
+    }
+
+    // Update an employee
+    @Operation(summary = "Update an employee", description = "Updates an employee to database.")
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Employee updateEmployee(@RequestBody Employee employee) {
         return employeeService.saveEmployee(employee);
     }
 
@@ -47,7 +55,7 @@ public class EmployeeController {
     @Operation(summary = "Delete an employee by ID", description = "Deletes an employee by ID.")
     @DeleteMapping("/{empNo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEmployee( @Parameter(description = "employee ID") @PathVariable Long empNo) {
+    public void deleteEmployee(@Parameter(description = "employee ID") @PathVariable Long empNo) {
         employeeService.deleteEmployee(empNo);
     }
 }
